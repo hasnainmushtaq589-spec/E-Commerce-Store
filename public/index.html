@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DINORAH | Luxury Jewelry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">DINORAH</a>
+            <nav>
+                <a href="#collections">Collections</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </nav>
+            <!-- Auth buttons will be injected by JavaScript -->
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <span class="hero-subtitle">Timeless Elegance</span>
+                <h1>Where Beauty<br>Meets Art</h1>
+                <p>Discover our exquisite collection of handcrafted jewelry, designed for those who appreciate refined
+                    beauty.</p>
+                <a href="#collections" class="hero-btn">Explore Collection</a>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- Featured Story Section -->
+        <section class="story-section">
+            <div class="story-container">
+                <div class="story-image">
+                    <img src="img/necklaces-main.jpg" alt="Necklaces Collection">
+                </div>
+                <div class="story-text">
+                    <h2 class="section-title">The Dinorah Story</h2>
+                    <p>Every piece of jewelry tells a story. At Dinorah, we combine traditional craftsmanship with
+                        modern design to create pieces that are as unique as you are. Our collections are inspired by
+                        the beauty of nature and the timeless elegance of fine metals and gemstones.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Showcase -->
+        <section class="categories-showcase" id="collections">
+            <div class="showcase-grid">
+                <div class="showcase-item">
+                    <img src="img/rings-main.jpg" alt="Rings" class="category-img" data-category="Ring">
+                    <button class="filter-btn" data-category="Ring">Shop Rings</button>
+                </div>
+                <div class="showcase-item">
+                    <img src="img/featured-story.jpg" alt="Necklaces" class="category-img" data-category="Necklace">
+                    <button class="filter-btn" data-category="Necklace">Shop Necklaces</button>
+                </div>
+                <div class="showcase-item">
+                    <img src="img/earrings-main.jpg" alt="Earrings" class="category-img" data-category="Earring">
+                    <button class="filter-btn" data-category="Earring">Shop Earrings</button>
+                </div>
+            </div>
+
+            <div class="all-filter">
+                <button class="filter-btn active" data-category="all">View All Collections</button>
+            </div>
+        </section>
+
+        <!-- Product Grid -->
+        <section class="products-section">
+            <div class="product-grid">
+                <!-- Products injected by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 DINORAH. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

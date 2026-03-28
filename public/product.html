@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | DINORAH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">DINORAH</a>
+            <nav>
+                <a href="index.html#collections">Collections</a>
+                <a href="#">Maison</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="product-detail-page">
+        <div class="product-detail-container">
+            <div class="product-image-section">
+                <img id="productImage" src="https://placehold.co/600x700?text=Loading..." alt="Product Image"
+                    class="product-detail-img">
+            </div>
+            <div class="product-info-section">
+                <div class="product-category-badge" id="productCategory">Loading...</div>
+                <h1 class="product-detail-name" id="productName">Loading...</h1>
+                <p class="product-detail-price" id="productPrice">PKR 0</p>
+                <div class="product-stock-status" id="productStock">
+                    <span class="stock-indicator"></span>
+                    <span class="stock-text">Checking availability...</span>
+                </div>
+                <p class="product-detail-description" id="productDescription">Loading product details...</p>
+                <div class="product-actions">
+                    <button class="btn btn-primary" id="shopNowBtn">Shop Now</button>
+                    <a href="index.html#collections" class="btn btn-secondary">Back to Collections</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Get product ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                window.location.href = '/index.html';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/products/${productId}`);
+                if (!res.ok) {
+                    throw new Error('Product not found');
+                }
+
+                const product = await res.json();
+
+                // Update page content
+                document.getElementById('productImage').src = product.imagePath || 'https://placehold.co/600x700?text=No+Image';
+                document.getElementById('productImage').alt = product.name;
+                document.getElementById('productName').textContent = product.name;
+                document.getElementById('productCategory').textContent = product.category;
+                document.getElementById('productPrice').textContent = `PKR ${product.price.toLocaleString()}`;
+                document.getElementById('productDescription').textContent = product.description || 'A stunning piece from our exclusive collection.';
+
+                // Update stock status
+                const stockStatus = document.getElementById('productStock');
+                if (product.inStock) {
+                    stockStatus.innerHTML = `
+                        <span class="stock-indicator in-stock"></span>
+                        <span class="stock-text">In Stock</span>
+                    `;
+                } else {
+                    stockStatus.innerHTML = `
+                        <span class="stock-indicator out-of-stock"></span>
+                        <span class="stock-text">Out of Stock</span>
+                    `;
+                }
+
+                // Update page title
+                document.title = `${product.name} | DINORAH`;
+
+            } catch (err) {
+                console.error('Error loading product:', err);
+                document.querySelector('.product-detail-container').innerHTML = `
+                    <div class="error-message">
+                        <h2>Product Not Found</h2>
+                        <p>Sorry, the product you're looking for doesn't exist.</p>
+                        <a href="/index.html" class="btn">Back to Home</a>
+                    </div>
+                `;
+            }
+        });
+
+        // Shop Now button handler
+        document.getElementById('shopNowBtn')?.addEventListener('click', () => {
+            const productId = new URLSearchParams(window.location.search).get('id');
+            window.location.href = `/checkout.html?id=${productId}`;
+        });
+    </script>
+</body>
+
+</html>

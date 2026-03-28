@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | DINORAH</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@400;500&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">DINORAH</a>
+            <nav>
+                <a href="index.html">View Site</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-dashboard">
+        <h1 class="section-title">Admin Dashboard</h1>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="salesStat">0</div>
+                <div class="stat-label">Total Sales (PKR)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="productsStat">0</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeStat">0</div>
+                <div class="stat-label">Active Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="ordersStat">0</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingStat">0</div>
+                <div class="stat-label">Pending Orders</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-tab="products">Manage Products</button>
+            <button class="tab-btn" data-tab="add">Add New Product</button>
+            <button class="tab-btn" data-tab="orders">View Orders</button>
+        </div>
+
+        <!-- Products Tab -->
+        <div class="tab-content active" id="products-tab">
+            <h2>All Products</h2>
+            <div class="products-table-container">
+                <table class="admin-table" id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price (PKR)</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Products loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Add Product Tab -->
+        <div class="tab-content" id="add-tab">
+            <div class="add-product-form">
+                <h2>Add New Product</h2>
+                <form id="addProductForm">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="category" class="form-control" required>
+                            <option value="Ring">Ring</option>
+                            <option value="Necklace">Necklace</option>
+                            <option value="Earring">Earring</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price (PKR)</label>
+                        <input type="number" name="price" class="form-control" required min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Stock Status</label>
+                        <select name="inStock" class="form-control">
+                            <option value="true">In Stock</option>
+                            <option value="false">Out of Stock</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Product Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <button type="submit" class="btn">Add Product</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="tab-content" id="orders-tab">
+            <h2>All Orders</h2>
+            <div class="products-table-container">
+                <table class="admin-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total (PKR)</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Orders loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Edit Product Modal -->
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <span class="modal-close" id="closeModal">&times;</span>
+                <h2>Edit Product</h2>
+                <form id="editProductForm">
+                    <input type="hidden" name="productId" id="editProductId">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" name="name" id="editName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="category" id="editCategory" class="form-control" required>
+                            <option value="Ring">Ring</option>
+                            <option value="Necklace">Necklace</option>
+                            <option value="Earring">Earring</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (PKR)</label>
+                        <input type="number" name="price" id="editPrice" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" id="editDescription" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Status</label>
+                        <select name="inStock" id="editInStock" class="form-control">
+                            <option value="true">In Stock</option>
+                            <option value="false">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>New Image (optional)</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn">Update Product</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check Auth
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (!token || !user.isAdmin) {
+            window.location.href = '/login.html';
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = '/index.html';
+        });
+    </script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

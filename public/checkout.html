@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary | DINORAH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">DINORAH</a>
+            <nav>
+                <a href="index.html#collections">Collections</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="checkout-page">
+        <div class="checkout-container">
+            <div class="checkout-grid">
+                <!-- Order Summary Section -->
+                <div class="checkout-summary">
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 2rem;">Order Summary</h2>
+                    <div id="productSummary" class="order-item-detail">
+                        <div class="loading">Loading product summary...</div>
+                    </div>
+                    <div class="order-total-block">
+                        <div class="total-line">
+                            <span>Subtotal</span>
+                            <span id="subtotalPrice">PKR 0</span>
+                        </div>
+                        <div class="total-line">
+                            <span>Shipping</span>
+                            <span>Calculated at checkout</span>
+                        </div>
+                        <div class="total-line grand-total">
+                            <span>Total</span>
+                            <span id="grandTotal">PKR 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Details Section -->
+                <div class="checkout-form-section">
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 2rem;">Shipping Details</h2>
+                    <form id="checkoutForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Enter your full name"
+                                required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" name="email" class="form-control" placeholder="email@example.com"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" name="phone" class="form-control" placeholder="+92 300 0000000"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Home Address</label>
+                            <textarea name="address" class="form-control" rows="3"
+                                placeholder="Street address, Apartment, etc." required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" name="city" class="form-control" placeholder="e.g. Karachi" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Zip Code</label>
+                                <input type="text" name="zipCode" class="form-control" placeholder="e.g. 75500"
+                                    required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary checkout-btn" id="confirmOrderBtn">Confirm
+                            Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <h2 class="section-title">Order Confirmed!</h2>
+            <p>Thank you for choosing DINORAH. Your order has been placed successfully and is being processed.</p>
+            <p id="orderNumberDisplay" style="font-weight: 600; margin: 1rem 0; color: var(--gold);"></p>
+            <a href="index.html" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                window.location.href = '/index.html';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/products/${productId}`);
+                if (!res.ok) throw new Error('Product not found');
+
+                const product = await res.json();
+                renderSummary(product);
+            } catch (err) {
+                console.error(err);
+                alert('Error loading order summary');
+                window.location.href = '/index.html';
+            }
+        });
+
+        function renderSummary(product) {
+            const summaryDiv = document.getElementById('productSummary');
+            summaryDiv.innerHTML = `
+                <div class="summary-item">
+                    <img src="${product.imagePath}" alt="${product.name}" class="summary-img">
+                    <div class="summary-info">
+                        <h3>${product.name}</h3>
+                        <p class="summary-category">${product.category}</p>
+                        <p class="summary-price">PKR ${product.price.toLocaleString()}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('subtotalPrice').textContent = `PKR ${product.price.toLocaleString()}`;
+            document.getElementById('grandTotal').textContent = `PKR ${product.price.toLocaleString()}`;
+        }
+
+        document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const guestInfo = Object.fromEntries(formData.entries());
+
+            const productId = new URLSearchParams(window.location.search).get('id');
+            const productPriceText = document.getElementById('subtotalPrice').textContent;
+            const productPrice = parseInt(productPriceText.replace(/[^\d]/g, ''));
+
+            const submitBtn = document.getElementById('confirmOrderBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing Order...';
+
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+            try {
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        items: [{ productId, quantity: 1 }],
+                        customerId: user ? user._id : null,
+                        guestInfo: guestInfo,
+                        notes: 'Order placed via Shop Now button'
+                    })
+                });
+
+                if (res.ok) {
+                    const order = await res.json();
+                    document.getElementById('orderNumberDisplay').textContent = `Order #: ${order.orderNumber}`;
+                    document.getElementById('successModal').style.display = 'flex';
+                } else {
+                    alert('Could not place order. Please try again.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred. Please try again later.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirm Order';
+            }
+        });
+    </script>
+</body>
+
+</html>
